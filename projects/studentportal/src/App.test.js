@@ -10,7 +10,7 @@ test('shows fictional sample profiles and adds a new student to browser storage'
   render(<Students />);
   expect(screen.getByText('Aarav Kumar')).toBeInTheDocument();
   fireEvent.change(screen.getByPlaceholderText(/alex johnson/i), { target: { value: 'Alex Johnson' } });
-  fireEvent.change(screen.getByPlaceholderText(/computer science/i), { target: { value: 'Computer Science' } });
+  fireEvent.change(screen.getByLabelText(/course \/ programme/i), { target: { value: 'Computer Science' } });
   fireEvent.click(screen.getByRole('button', { name: /add student/i }));
 
   expect(screen.getByText('Alex Johnson')).toBeInTheDocument();
