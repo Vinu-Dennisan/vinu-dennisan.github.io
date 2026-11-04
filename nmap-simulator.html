@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080812">
+<meta name="description" content="Interactive educational Nmap network scanning simulator and learning guide.">
+<title>Network Analysis with Nmap | Vinu Dennisan</title>
+<style>
+:root{color-scheme:dark;--bg:#080812;--panel:#121326;--line:#292943;--text:#f3f3ff;--muted:#aaaac2;--purple:#a78bfa;--blue:#60a5fa;--green:#4ade80}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#21163e,transparent 38%),var(--bg);color:var(--text);font:15px/1.65 Inter,system-ui,Segoe UI,sans-serif}a{color:inherit}.wrap{width:min(1050px,calc(100% - 32px));margin:auto}.top{padding:22px 0;border-bottom:1px solid var(--line)}.top a{display:inline-block;text-decoration:none;padding:9px 14px;border:1px solid var(--line);border-radius:10px;background:#17172c;font-weight:700;color:#d9d1ff}.hero{padding:65px 0 35px}.eyebrow{color:#c4b5fd;font-size:12px;font-weight:800;letter-spacing:2px}.hero h1{font-size:clamp(32px,6vw,54px);line-height:1.12;margin:12px 0}.hero p,.muted{color:var(--muted)}.panel{background:#121326eF;border:1px solid var(--line);border-radius:18px;padding:24px;margin:20px 0}.panel h2{margin-top:0}.controls{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field label{display:block;font-size:12px;color:var(--muted);font-weight:700;margin-bottom:6px}.field select,.field input{width:100%;padding:12px;background:#090a17;color:var(--text);border:1px solid #383852;border-radius:10px;font:inherit}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.btn{border:0;border-radius:10px;padding:11px 16px;background:linear-gradient(120deg,var(--purple),var(--blue));color:#080812;font-weight:800;cursor:pointer}.btn.secondary{background:#202039;color:var(--text);border:1px solid var(--line)}.terminal{background:#05060d;border:1px solid #303047;border-radius:12px;padding:17px;min-height:150px;overflow-wrap:anywhere}.terminal pre{white-space:pre-wrap;margin:0;color:#c8f7d5;font:13px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace}.status{color:var(--green);font-weight:800}.result{display:none;margin-top:16px}.result table{width:100%;border-collapse:collapse;font-size:13px}.result th,.result td{text-align:left;padding:10px;border-bottom:1px solid var(--line)}.tag{display:inline-block;padding:3px 8px;border-radius:20px;background:#173725;color:#8df0ae;font-size:11px}.note{border-left:3px solid var(--purple);padding:10px 14px;background:#17152a;color:#c9c5e6;border-radius:0 8px 8px 0}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.mini{padding:16px;border:1px solid var(--line);border-radius:12px;background:#0e0f20}.mini b{display:block;margin-bottom:5px}.mini p{color:var(--muted);font-size:13px;margin:0}footer{padding:35px 0;color:var(--muted);font-size:12px;text-align:center}@media(max-width:650px){.controls,.grid{grid-template-columns:1fr}.panel{padding:18px}.hero{padding-top:45px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><a href="https://vinu-dennisan.github.io/">← Back to Portfolio</a></div></header>
+<main class="wrap">
+<section class="hero"><div class="eyebrow">PROJECT 05 · NETWORKING & SECURITY</div><h1>Network Analysis with <span style="color:#a78bfa">Nmap</span></h1><p>Explore common Nmap scan types, understand sample output, and learn how network discovery supports defensive security.</p></section>
+<section class="panel">
+<h2>Interactive scan simulator</h2>
+<p class="muted">Choose a scan profile and a documentation-only target. This simulator generates illustrative output locally; it does not send packets, scan devices, or access a network.</p>
+<div class="controls">
+<div class="field"><label for="scan">SCAN TYPE</label><select id="scan"><option value="basic">Basic host discovery (-sn)</option><option value="syn">TCP SYN scan (-sS)</option><option value="service">Service/version detection (-sV)</option><option value="os">OS detection (-O)</option><option value="full">Common ports + service detection (-sV)</option></select></div>
+<div class="field"><label for="target">SAMPLE TARGET</label><select id="target"><option value="192.0.2.10">192.0.2.10 — Example web server</option><option value="198.51.100.25">198.51.100.25 — Example workstation</option><option value="203.0.113.8">203.0.113.8 — Example DNS host</option></select></div>
+</div>
+<div class="actions"><button class="btn" id="run">Run simulated scan</button><button class="btn secondary" id="clear">Clear output</button></div>
+<div class="terminal" style="margin-top:18px"><pre id="output">vinu-nmap-simulator v1.0
+Ready. Select a scan profile and press “Run simulated scan”.
+All addresses shown are documentation examples.</pre></div>
+<div class="result panel" id="result"><h3>Illustrative findings</h3><div id="table"></div></div>
+</section>
+<section class="panel"><h2>What the scan options mean</h2><div class="grid">
+<div class="mini"><b>Host discovery</b><p>Checks whether hosts appear reachable without performing a port scan.</p></div>
+<div class="mini"><b>SYN scan (-sS)</b><p>Examines TCP ports using SYN probes; often called a half-open scan.</p></div>
+<div class="mini"><b>Version detection (-sV)</b><p>Probes open ports to identify the services and versions listening there.</p></div>
+<div class="mini"><b>OS detection (-O)</b><p>Uses TCP/IP fingerprinting to estimate the target operating system.</p></div>
+<div class="mini"><b>Ports</b><p>Open ports indicate services accepting connections; they are not proof of a vulnerability.</p></div>
+<div class="mini"><b>Defensive use</b><p>Inventory approved assets, reduce unnecessary exposure, and verify firewall rules.</p></div>
+</div></section>
+<section class="panel"><h2>Responsible use</h2><p class="note">Only scan systems you own or have explicit permission to assess. Unauthorized scanning may violate policy or law. The addresses in this demo are reserved for documentation and the simulator does not perform real network activity.</p><p class="muted">For the real Nmap reference guide and installation instructions, visit <a href="https://nmap.org/book/man.html" target="_blank" rel="noopener noreferrer">the official Nmap documentation</a>.</p><a class="btn secondary" href="nmap-network-analysis-notes.md" style="display:inline-block;text-decoration:none">Read project notes ↗</a></section>
+</main>
+<footer class="wrap">Built as an educational portfolio demonstration · No live network scanning is performed</footer>
+<script>
+const profiles={
+basic:{flag:"-sn",desc:"Host discovery only; no port scan requested.",rows:[["Host","192.0.2.10","Status"],["Discovery","ICMP/TCP probes (illustrative)","Method"],["Host state","up (sample)","State"]]},
+syn:{flag:"-sS",desc:"Illustrative TCP SYN scan against a small sample port set.",rows:[["22/tcp","closed","ssh"],["80/tcp","open","http"],["443/tcp","open","https"],["3306/tcp","filtered","mysql"]]},
+service:{flag:"-sV",desc:"Illustrative service identification on sample open ports.",rows:[["80/tcp","open","http (sample server)"],["443/tcp","open","https (sample server)"],["22/tcp","closed","ssh"]]},
+os:{flag:"-O",desc:"OS fingerprinting example; actual accuracy depends on response quality.",rows:[["OS guess","Linux/Unix-like (illustrative)","Confidence not assessed"],["Network distance","1 hop (sample)","Illustrative"]]},
+full:{flag:"-sV",desc:"Common web and administration ports with sample service labels.",rows:[["22/tcp","closed","ssh"],["80/tcp","open","http"],["443/tcp","open","https"],["8080/tcp","open","http-proxy (sample)"],["3306/tcp","filtered","mysql"]]}
+};
+const output=document.getElementById("output"),result=document.getElementById("result"),table=document.getElementById("table");
+document.getElementById("run").addEventListener("click",()=>{const type=document.getElementById("scan").value,target=document.getElementById("target").value,p=profiles[type];output.textContent="$ nmap "+p.flag+" "+target+"\n\nStarting Nmap (SIMULATION)\nNote: This is generated sample output. No packets were sent.\n\n"+p.desc+"\n\nNmap done: 1 IP address (1 host shown as sample)";table.innerHTML="<table><thead><tr><th>Port / item</th><th>State / value</th><th>Service / note</th></tr></thead><tbody>"+p.rows.map(r=>"<tr>"+r.map(c=>"<td>"+c+"</td>").join("")+"</tr>").join("")+"</tbody></table>";result.style.display="block";});
+document.getElementById("clear").addEventListener("click",()=>{output.textContent="Output cleared. Ready for another simulated scan.";result.style.display="none";});
+</script>
+</body></html>
