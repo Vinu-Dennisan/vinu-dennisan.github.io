@@ -1,157 +1,45 @@
-import React, { useState,useEffect, useRef } from 'react';
-import './Students.css';
-const container = {
-  padding: '20px',
-  maxWidth: '500px',
-  margin: '0 auto',
-  backgroundColor: '#f9f9f9',
-  borderRadius: '10px',
-  boxShadow: '0 0 10px rgba(0,0,0,0.1)'
-};
-
-const inputRow = {
-  display: 'flex',
-  gap: '10px',
-  marginBottom: '20px'
-};
-
-const input = {
-  flex: 1,
-  padding: '8px',
-  borderRadius: '4px',
-  border: '1px solid #ccc'
-};
-
-const button = {
-  padding: '8px 16px',
-  backgroundColor: '#007bff',
-  color: 'white',
-  border: 'none',
-  borderRadius: '4px',
-  cursor: 'pointer'
-};
-
-const list = {
-  listStyle: 'none',
-  padding: 0
-};
-
-const Students = () => {
-  const [students, setStudents] = useState([]);
-  const [newStudent, setNewStudent] = useState('');
-  const inputRef = useRef(null);
-
-  useEffect(() => {
-    // Simulate fetching initial data
-    setTimeout(() => {
-      setStudents(["Alice", "Bob", "Charlie"]);
-    }, 500);
-  }, []);
-
-  const handleAdd = () => {
-    if (newStudent.trim()) {
-      setStudents([...students, newStudent]);
-      setNewStudent('');
-      inputRef.current.focus();
-    }
-  };
-
-  const handleInputChange = (e) => {
-    setNewStudent(e.target.value);
-  };
-
-  return (
-    <div style={container}>
-      <h2>Student List</h2>
-
-      <div style={inputRow}>
-        <input
-          type="text"
-          value={newStudent}
-          onChange={handleInputChange}
-          ref={inputRef}
-          placeholder="Enter student name"
-          style={input}
-        />
-        <button onClick={handleAdd} style={button}>Add</button>
-      </div>
-
-      {students.length > 0 ? (
-        <ul style={list}>
-          {students.map((student, index) => (
-            <li key={index}>{student}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>No students available.</p>
-      )}
-    </div>
-  );
-};
-
-
-/*function Students() {
-  const [student, setStudent] = useState({ name: '', course: '' });
-  const [studentList, setStudentList] = useState([]);
+import React, { useEffect, useMemo, useState } from 'react';
+const STORAGE_KEY = 'vinu-student-portal-students';
+function readStudents() {
+  try { const saved = window.localStorage.getItem(STORAGE_KEY); return saved ? JSON.parse(saved) : []; }
+  catch { return []; }
+}
+export default function Students() {
+  const [students, setStudents] = useState(readStudents);
+  const [name, setName] = useState('');
+  const [course, setCourse] = useState('');
+  const [email, setEmail] = useState('');
+  const [search, setSearch] = useState('');
   const [error, setError] = useState('');
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setStudent({ ...student, [name]: value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (student.name.trim() === '' || student.course.trim() === '') {
-      setError('Please fill out all fields.');
-      return;
-    }
-    setStudentList([...studentList, { ...student }]);
-    setStudent({ name: '', course: '' });
-    setError('');
-  };
-
-  return (
-    <div className="students-container">
-      <h2>Add Student</h2>
-
-      <form onSubmit={handleSubmit} className="student-form">
-        <input
-          type="text"
-          name="name"
-          placeholder="Student Name"
-          value={student.name}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="course"
-          placeholder="Course"
-          value={student.course}
-          onChange={handleChange}
-        />
-        <button type="submit">Add</button>
-      </form>
-
-      {error && <p className="error-msg">{error}</p>}
-
-      <h3>Student List</h3>
-      <ul className="student-list">
-        {studentList.map((s, index) => (
-          <li key={index}>
-            {s.name} - {s.course}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}*/
-
-
-export default Students;
-
-
-
-
-
-
+  useEffect(() => {
+    try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(students)); }
+    catch { setError('Your browser could not save the records. Check available storage.'); }
+  }, [students]);
+  const filtered = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    if (!query) return students;
+    return students.filter(student => [student.name, student.course, student.email || ''].some(value => value.toLowerCase().includes(query)));
+  }, [students, search]);
+  function handleSubmit(event) {
+    event.preventDefault();
+    const cleanName = name.trim(), cleanCourse = course.trim(), cleanEmail = email.trim();
+    if (!cleanName || !cleanCourse) { setError('Please enter the student name and course.'); return; }
+    setStudents(current => [{ id: String(Date.now()) + Math.random().toString(36).slice(2, 8), name: cleanName, course: cleanCourse, email: cleanEmail }, ...current]);
+    setName(''); setCourse(''); setEmail(''); setError('');
+  }
+  function removeStudent(id) { setStudents(current => current.filter(student => student.id !== id)); }
+  return <section className="students-page">
+    <div className="section-heading"><div><span className="eyebrow">YOUR RECORDS</span><h2>Students</h2><p>Add and manage student details.</p></div><div className="student-count"><strong>{students.length}</strong><span>Saved students</span></div></div>
+    <form className="student-form" onSubmit={handleSubmit}><h3>Add a student</h3>
+      <div className="form-grid">
+        <label>Student name<input value={name} onChange={event => setName(event.target.value)} placeholder="e.g. Alex Johnson" /></label>
+        <label>Course<input value={course} onChange={event => setCourse(event.target.value)} placeholder="e.g. Computer Science" /></label>
+        <label className="full-field">Email address <span className="optional-label">(optional)</span><input type="email" value={email} onChange={event => setEmail(event.target.value)} placeholder="alex@example.com" /></label>
+      </div>
+      {error && <p className="form-error" role="alert">{error}</p>}<button className="primary-button" type="submit">Add student</button>
+    </form>
+    <div className="list-heading"><div><h3>Student directory</h3><p>{filtered.length} {filtered.length === 1 ? 'record' : 'records'} shown</p></div><input className="search-input" aria-label="Search students" value={search} onChange={event => setSearch(event.target.value)} placeholder="Search students..." /></div>
+    {filtered.length ? <div className="student-list">{filtered.map(student => <article className="student-row" key={student.id}><div className="student-avatar" aria-hidden="true">{student.name.charAt(0).toUpperCase()}</div><div className="student-details"><strong>{student.name}</strong><span>{student.course}</span>{student.email && <small>{student.email}</small>}</div><button className="remove-button" type="button" onClick={() => removeStudent(student.id)} aria-label={'Remove ' + student.name}>Remove</button></article>)}</div> : <div className="empty-state"><h3>{search ? 'No matching students' : 'No students added yet'}</h3><p>{search ? 'Try a different search term.' : 'Use the form above to add your first student.'}</p></div>}
+    <p className="storage-note">Records are saved only in this browser. Clearing browser data or using another device will not transfer them.</p>
+  </section>;
+}
