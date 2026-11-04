@@ -27,7 +27,7 @@ jobs:
       - name: Preserve portfolio files for deployment
         run: |
           mkdir -p _site
-          tar --exclude=.git --exclude=.github -cf - . | tar -xf - -C _site
+          rsync -a --exclude='.git' --exclude='.github' --exclude='_site' --exclude='projects/studentportal/node_modules' --exclude='projects/studentportal/build' ./ _site/
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -38,7 +38,7 @@ jobs:
 
       - name: Install Student Portal dependencies
         working-directory: projects/studentportal
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Build Student Portal
         working-directory: projects/studentportal
