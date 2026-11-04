@@ -1,231 +1,70 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A demo knowledge graph assistant for exploring company teams, members, and projects.">
-  <title>Knowledge Graph Assistant — GraphRAG Demo</title>
-  <style>
-    :root {
-      --bg: #F5F6FA;
-      --surface: #FFFFFF;
-      --ink: #1A1D29;
-      --muted: #6B7086;
-      --line: #E4E6EF;
-      --accent: #5B4FE8;
-      --accent-soft: #EDEBFD;
-      --edge: #C6C2F5;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--ink); }
-    .project-nav { background: var(--ink); color: #fff; padding: 9px 16px; display: flex; gap: 14px; flex-wrap: wrap; align-items: center; font-size: 12px; }
-    .project-nav span { opacity: .6; }
-    .project-nav a { color: #fff; text-decoration: none; }
-    .project-nav a:hover, header a:hover { text-decoration: underline; }
-    header { background: var(--surface); border-bottom: 1px solid var(--line); padding: 18px 32px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
-    .logo { font-size: 18px; font-weight: 800; color: var(--accent); }
-    header a { font-size: 13px; color: var(--accent); text-decoration: none; font-weight: 600; }
-    .hero { text-align: center; padding: 36px 20px 10px; }
-    .hero h1 { font-size: 26px; margin-bottom: 8px; }
-    .hero p { color: var(--muted); font-size: 14px; max-width: 600px; margin: 0 auto; line-height: 1.6; }
-    .stack-badges { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; padding: 16px 20px; }
-    .stack-badges span { font-size: 12px; background: var(--accent-soft); color: var(--accent); padding: 5px 12px; border-radius: 20px; font-weight: 600; }
-    .layout { max-width: 1000px; margin: 0 auto; padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; min-width: 0; }
-    .panel h2 { font-size: 14px; margin-bottom: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
-    .graph-box { background: var(--bg); border-radius: 10px; padding: 10px; min-height: 260px; display: flex; align-items: center; justify-content: center; }
-    .graph-box svg { max-width: 100%; height: auto; }
-    .graph-note { font-size: 12px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
-    .chat-box { display: flex; flex-direction: column; min-height: 400px; }
-    .messages { flex: 1; min-height: 230px; max-height: 330px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-bottom: 12px; }
-    .msg { max-width: 90%; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
-    .msg.user { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
-    .msg.bot { align-self: flex-start; background: var(--accent-soft); color: var(--ink); border-bottom-left-radius: 4px; }
-    .source { display: block; margin-top: 8px; font-size: 11px; color: var(--muted); font-style: italic; }
-    .chat-input { display: flex; gap: 8px; margin-top: 10px; }
-    .chat-input input { flex: 1; min-width: 0; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--line); font: inherit; font-size: 13px; }
-    .chat-input input:focus { outline: 2px solid var(--edge); border-color: var(--accent); }
-    .chat-input button { padding: 10px 18px; border-radius: 8px; border: none; background: var(--accent); color: #fff; font-weight: 600; font-size: 13px; cursor: pointer; }
-    .chat-input button:hover { filter: brightness(.95); }
-    .sample-qs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-    .sample-qs button { font-size: 11px; background: var(--bg); border: 1px solid var(--line); padding: 6px 10px; border-radius: 16px; cursor: pointer; color: var(--muted); }
-    .sample-qs button:hover { border-color: var(--accent); color: var(--accent); }
-    .architecture { max-width: 1000px; margin: 20px auto 50px; padding: 0 20px; }
-    .architecture .panel { padding: 24px; }
-    .arch-flow { display: flex; align-items: stretch; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
-    .arch-step { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; font-size: 12px; text-align: center; flex: 1; min-width: 130px; line-height: 1.5; }
-    .arch-step b { display: block; color: var(--accent); font-size: 13px; margin-bottom: 4px; }
-    .arrow { color: var(--muted); font-size: 18px; align-self: center; }
-    footer { text-align: center; padding: 0 20px 24px; color: var(--muted); font-size: 12px; }
-    @media (max-width: 800px) { .layout { grid-template-columns: 1fr; } header { padding: 16px 20px; flex-wrap: wrap; } .hero h1 { font-size: 22px; } .arrow { display: none; } }
-  </style>
-
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Explore entities, relationships and paths in an interactive knowledge graph.">
+<title>Knowledge Graph Explorer</title>
 <style>
-.portfolio-return{position:fixed;left:18px;bottom:18px;z-index:9999;display:inline-flex;align-items:center;gap:9px;padding:12px 17px;border:1px solid rgba(91,76,246,.22);border-radius:999px;background:#fff;color:#3026a5;text-decoration:none;font:700 13px/1.2 Inter,system-ui,sans-serif;box-shadow:0 8px 28px rgba(20,24,50,.18);transition:transform .2s,box-shadow .2s}
-.portfolio-return:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(20,24,50,.24)}
-@media(max-width:480px){.portfolio-return{left:12px;bottom:12px;padding:11px 14px;font-size:12px}}
+:root{color-scheme:dark;--bg:#0b1020;--panel:#121a2b;--panel2:#182238;--line:#293650;--text:#edf2ff;--muted:#9aa8c0;--accent:#9888ff;--cyan:#48d9d0;--pink:#ff8fbd;--gold:#f3ca70;--blue:#78a8ff}
+:root[data-theme=light]{color-scheme:light;--bg:#f3f5fb;--panel:#fff;--panel2:#f0f2fa;--line:#dfe4ef;--text:#1c2436;--muted:#68748b;--accent:#6655d9;--cyan:#087f83;--pink:#c33e78;--gold:#986700;--blue:#3269bd}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -25%,color-mix(in srgb,var(--accent) 18%,transparent),transparent 60%),var(--bg);color:var(--text);font:14px/1.5 Inter,system-ui,Segoe UI,sans-serif;transition:background .2s,color .2s}.top{height:66px;padding:0 26px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;background:var(--panel);position:sticky;top:0;z-index:5}.brand{font-weight:850;font-size:17px}.brand b{color:var(--accent)}.top-right{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:12px}.theme{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:9px;padding:8px 11px;cursor:pointer}.back{position:fixed;bottom:18px;left:18px;z-index:10;text-decoration:none;background:var(--text);color:var(--bg);padding:11px 16px;border-radius:30px;font-weight:800;box-shadow:0 8px 30px #0004}.wrap{max-width:1440px;margin:auto;padding:26px}.intro{display:flex;justify-content:space-between;gap:20px;align-items:end;margin:4px 0 22px}.eyebrow{color:var(--cyan);text-transform:uppercase;letter-spacing:2px;font-size:10px;font-weight:800}.intro h1{font-size:clamp(25px,4vw,36px);line-height:1.12;margin:7px 0}.intro p{color:var(--muted);margin:0;max-width:670px}.stats{display:flex;gap:10px;flex-wrap:wrap}.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 15px;min-width:88px}.stat strong{display:block;font-size:20px}.stat span{color:var(--muted);font-size:11px}.workspace{display:grid;grid-template-columns:235px minmax(0,1fr) 265px;gap:14px;align-items:stretch}.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;min-width:0;box-shadow:0 8px 28px #0000000a}.side,.detail{padding:17px}.section-title{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);font-weight:800;margin:0 0 12px}.search{width:100%;padding:11px 12px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--text);outline:none}.search:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}.filters{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 20px}.chip{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:20px;padding:6px 10px;font-size:11px;cursor:pointer}.chip.active{background:color-mix(in srgb,var(--accent) 20%,var(--panel));color:var(--text);border-color:var(--accent)}.entity-list{display:grid;gap:5px;max-height:330px;overflow:auto}.entity{display:flex;align-items:center;gap:9px;text-align:left;width:100%;border:1px solid transparent;background:transparent;color:var(--text);padding:8px;border-radius:9px;cursor:pointer}.entity:hover,.entity.selected{background:var(--panel2);border-color:var(--line)}.dot{width:9px;height:9px;border-radius:50%;flex:none}.hint{font-size:11px;color:var(--muted);margin-top:15px;line-height:1.6}.graph-panel{padding:16px;display:flex;flex-direction:column;min-height:590px}.graph-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}.graph-head h2{font-size:14px;margin:0}.actions{display:flex;gap:7px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:8px 11px;border-radius:8px;cursor:pointer;font-size:11px}.btn.primary{background:var(--accent);border-color:var(--accent);color:white}.canvas{flex:1;min-height:460px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--bg) 85%,var(--panel));overflow:hidden}.canvas svg{width:100%;height:100%;min-height:460px;display:block}.edge{stroke:var(--muted);stroke-width:1.5;opacity:.62}.edge-label{fill:var(--muted);font-size:9px;text-anchor:middle}.node{cursor:pointer}.node circle{stroke:var(--panel);stroke-width:3;filter:drop-shadow(0 4px 7px #0004)}.node text{fill:white;text-anchor:middle;font-size:10px;font-weight:700;pointer-events:none}.node.dim,.edge.dim{opacity:.12}.node.active circle{stroke:var(--text);stroke-width:4}.node.search-hit circle{stroke:var(--gold);stroke-width:4}.legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:10px;padding:12px 3px 0}.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}.tag{display:inline-block;color:var(--text);background:var(--panel2);border:1px solid var(--line);padding:3px 8px;border-radius:20px;font-size:10px}.detail-card{background:var(--bg);border:1px solid var(--line);padding:13px;border-radius:12px;margin-bottom:12px}.detail-name{font-size:19px;font-weight:800;margin:5px 0}.muted{color:var(--muted)}.relation{padding:9px 0;border-bottom:1px solid var(--line);font-size:12px}.relation:last-child{border:0}.relation b{color:var(--cyan)}.pathout{font-size:12px;color:var(--gold);margin-top:10px;line-height:1.7;min-height:20px}.chat,.learn{margin-top:15px;padding:18px}.chat-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.chat h2,.learn h2{font-size:15px;margin:0 0 5px}.chat p,.learn p{color:var(--muted);font-size:12px;margin:0 0 12px}.messages{height:175px;overflow:auto;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px}.bubble{padding:8px 11px;border-radius:10px;max-width:95%;font-size:12px;background:var(--panel2);overflow-wrap:anywhere}.bubble.user{align-self:flex-end;background:var(--accent);color:white}.bubble small{display:block;color:var(--muted);margin-top:5px;font-size:10px}.bubble.user small{color:#eee}.askrow{display:flex;gap:7px;margin-top:8px}.askrow input{flex:1;min-width:0}.examples{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.step{padding:12px;background:var(--bg);border:1px solid var(--line);border-radius:10px;font-size:11px;color:var(--muted)}.step b{display:block;color:var(--cyan);font-size:12px;margin-bottom:5px}.foot{text-align:center;color:var(--muted);font-size:10px;padding:24px}
+@media(max-width:1080px){.workspace{grid-template-columns:220px minmax(0,1fr)}.detail{grid-column:1/-1}.detail-inner{display:grid;grid-template-columns:1fr 1fr;gap:12px}.detail-inner>.section-title{grid-column:1/-1}}@media(max-width:700px){.wrap{padding:15px}.workspace{grid-template-columns:1fr}.graph-panel{min-height:500px}.detail{grid-column:auto}.intro{display:block}.stats{margin-top:16px}.chat-grid{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}.top{padding:0 15px}.top-right>span{display:none}}@media(max-width:420px){.steps{grid-template-columns:1fr}.back{left:10px;bottom:10px;font-size:12px;padding:9px 12px}}
 </style>
 </head>
 <body>
-<a class="portfolio-return" href="https://vinu-dennisan.github.io/" aria-label="Return to Vinu's Portfolio">← Back to Portfolio</a>
-
-
-
- 
-  <header>
-    <div class="logo">🧠 Knowledge Graph Assistant</div>
-    
-  </header>
-
-  <section class="hero">
-    <h1>GraphRAG Demo — Chat with a Knowledge Graph</h1>
-    <p>Ask questions about a sample company graph and get answers based on relationships between people, teams, and projects.</p>
-  </section>
-
-  <div class="stack-badges" aria-label="Technology concepts">
-    <span>Knowledge Graph</span><span>GraphRAG Concept</span><span>JavaScript Demo</span><span>Responsive UI</span>
-  </div>
-
-  <main class="layout">
-    <section class="panel" aria-labelledby="graph-heading">
-      <h2 id="graph-heading">Knowledge Graph</h2>
-      <div class="graph-box">
-        <svg viewBox="0 0 320 220" width="320" role="img" aria-label="Company connected to AI and Web teams, each connected to its team lead">
-          <g stroke="#C6C2F5" stroke-width="2" fill="none">
-            <line x1="160" y1="40" x2="80" y2="110"/><line x1="160" y1="40" x2="240" y2="110"/>
-            <line x1="80" y1="110" x2="80" y2="180"/><line x1="240" y1="110" x2="240" y2="180"/>
-          </g>
-          <circle cx="160" cy="40" r="26" fill="#5B4FE8"/><text x="160" y="45" text-anchor="middle" fill="#fff" font-size="10">TechNova</text>
-          <circle cx="80" cy="110" r="24" fill="#7C72EE"/><text x="80" y="115" text-anchor="middle" fill="#fff" font-size="9">Team: AI</text>
-          <circle cx="240" cy="110" r="24" fill="#7C72EE"/><text x="240" y="115" text-anchor="middle" fill="#fff" font-size="9">Team: Web</text>
-          <circle cx="80" cy="180" r="22" fill="#A79EF5"/><text x="80" y="183" text-anchor="middle" fill="#fff" font-size="9">Vinu (Lead)</text>
-          <circle cx="240" cy="180" r="22" fill="#A79EF5"/><text x="240" y="183" text-anchor="middle" fill="#fff" font-size="9">Rahul (Lead)</text>
-        </svg>
-      </div>
-      <p class="graph-note">This page uses a small JavaScript object as sample graph data. A production version could store nodes and relationships in Neo4j.</p>
-    </section>
-
-    <section class="panel chat-box" aria-labelledby="chat-heading">
-      <h2 id="chat-heading">Ask the Assistant</h2>
-      <div class="messages" id="messages" aria-live="polite" aria-relevant="additions">
-        <div class="msg bot">Hi! Ask me about the company's teams, people, or projects. Try one of the sample questions below.</div>
-      </div>
-      <form class="chat-input" id="chatForm">
-        <input type="text" id="chatInput" placeholder="e.g. Who leads the AI team?" aria-label="Your question" autocomplete="off" required>
-        <button type="submit">Ask</button>
-      </form>
-      <div class="sample-qs" aria-label="Sample questions">
-        <button type="button" data-question="Who leads the AI team?">Who leads the AI team?</button>
-        <button type="button" data-question="What projects does the Web team work on?">Web team projects?</button>
-        <button type="button" data-question="Who does Vinu work with?">Who does Vinu work with?</button>
-        <button type="button" data-question="Who are the AI team members?">AI team members?</button>
-      </div>
-    </section>
-  </main>
-
-  <section class="architecture">
-    <div class="panel">
-      <h2>How a production version could work</h2>
-      <div class="arch-flow">
-        <div class="arch-step"><b>Neo4j</b>Stores entities and relationships</div><span class="arrow" aria-hidden="true">→</span>
-        <div class="arch-step"><b>Retriever</b>Finds relevant nodes and edges</div><span class="arrow" aria-hidden="true">→</span>
-        <div class="arch-step"><b>AI model</b>Forms an answer from retrieved context</div>
-      </div>
-      <p class="graph-note">This is a front-end simulation only. It does not currently connect to Neo4j, an AI API, or a database.</p>
-    </div>
-  </section>
-  <footer>Knowledge Graph Assistant · Demo data only</footer>
-
-  <script>
-    // Sample data for the front-end demo. Answers are generated only from these records.
-    const graph = {
-      company: 'TechNova',
-      teams: [
-        { name: 'AI', lead: 'Vinu', members: ['Vinu', 'Chhota Bheem', 'Kalia'], projects: ['Recommendation Engine', 'Chat Assistant'] },
-        { name: 'Web', lead: 'Rahul', members: ['Rahul', 'Meera', 'Suresh'], projects: ['Customer Portal', 'Admin Dashboard'] }
-      ]
-    };
-
-    const normalize = value => value.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
-
-    function findAnswer(question) {
-      const q = normalize(question);
-      const asksAI = /\bai\b|artificial intelligence/.test(q);
-      const asksWeb = /\bweb\b/.test(q);
-      const asksProjects = /\bprojects?\b|\bwork on\b/.test(q);
-      const asksLead = /\blead\b|\bleader\b|\bwho manages\b|\bhead of\b/.test(q);
-      const asksMembers = /\bmembers?\b|\bcolleagues?\b|\bteam\b/.test(q);
-      const asksVinu = /\bvinu\b/.test(q);
-      const asksRahul = /\brahul\b/.test(q);
-
-      const team = asksAI ? graph.teams.find(t => t.name === 'AI')
-        : asksWeb ? graph.teams.find(t => t.name === 'Web')
-        : null;
-
-      if (asksLead && team) {
-        return { text: `${team.lead} leads the ${team.name} team.`, source: `Graph path: Team(${team.name}) → LEAD → Person(${team.lead})` };
-      }
-      if (asksProjects && team) {
-        return { text: `The ${team.name} team works on: ${team.projects.join(', ')}.`, source: `Graph path: Team(${team.name}) → WORKS_ON → Projects` };
-      }
-      if (asksMembers && team && !asksVinu && !asksRahul) {
-        return { text: `The ${team.name} team members are: ${team.members.join(', ')}.`, source: `Graph path: Team(${team.name}) → HAS_MEMBER → People` };
-      }
-      if (asksVinu) {
-        const vinuTeam = graph.teams.find(t => t.members.includes('Vinu'));
-        const colleagues = vinuTeam.members.filter(name => name !== 'Vinu');
-        return { text: `Vinu is on the ${vinuTeam.name} team and works with ${colleagues.join(' and ')}.`, source: `Graph path: Person(Vinu) → MEMBER_OF → Team(${vinuTeam.name}) → HAS_MEMBER → People` };
-      }
-      if (asksRahul) {
-        const rahulTeam = graph.teams.find(t => t.members.includes('Rahul'));
-        const colleagues = rahulTeam.members.filter(name => name !== 'Rahul');
-        return { text: `Rahul is on the ${rahulTeam.name} team and works with ${colleagues.join(' and ')}.`, source: `Graph path: Person(Rahul) → MEMBER_OF → Team(${rahulTeam.name}) → HAS_MEMBER → People` };
-      }
-      if (asksProjects && !team) {
-        return { text: 'Which team do you mean: AI or Web?', source: 'Please specify a team to find its projects.' };
-      }
-      if (asksLead && !team) {
-        return { text: 'Which team lead do you want to know about: AI or Web?', source: 'Please specify a team.' };
-      }
-      return { text: 'I could not find a matching answer in this sample graph. Try asking who leads the AI or Web team, what projects a team works on, or who Vinu or Rahul works with.', source: 'No matching graph path found.' };
-    }
-
-    const form = document.getElementById('chatForm');
-    const input = document.getElementById('chatInput');
-    const messages = document.getElementById('messages');
-
-    function appendMessage(text, type, source) {
-      const message = document.createElement('div');
-      message.className = `msg ${type}`;
-      // Use textContent for all user and answer text to avoid injecting HTML.
-      message.appendChild(document.createTextNode(text));
-      if (source) {
-        const sourceElement = document.createElement('span');
-        sourceElement.className = 'source';
-        sourceElement.textContent = source;
-        message.appendChild(sourceElement);
-      }
-      messages.appendChild(message);
-      messages.scrollTop = messages.scrollHeight;
-    }
-
-    function sendMessage(question) {
-      const text = (question ?? input.value).trim();
-      if (!text) return;
-      appendMessage(text, 'user');
-      input.value = '';
-      const answer = findAnswer(text);
-      appendMessage(answer.text, 'bot', answer.source);
-    }
-
-    form.addEventListener('submit', event => {
-      event.preventDefault();
-      sendMessage();
-    });
-
-    document.querySelectorAll('[data-question]').forEach(button => {
-      button.addEventListener('click', () => sendMessage(button.dataset.question));
-    });
-  </script>
-</body>
-</html>
+<a class="back" href="https://vinu-dennisan.github.io/">← Back to Portfolio</a>
+<header class="top"><div class="brand">🧠 <b>Graph</b>Explorer</div><div class="top-right"><span>Knowledge Graph Assistant · Learning demo</span><button class="theme" id="themeToggle" type="button">☀ Light mode</button></div></header>
+<main class="wrap">
+<section class="intro"><div><div class="eyebrow">Explore connected information</div><h1>Knowledge Graph Explorer</h1><p>Discover how people, teams, technologies and projects connect. Search entities, inspect relationships, trace paths and ask questions grounded in the sample data.</p></div><div class="stats"><div class="stat"><strong id="nodeCount">0</strong><span>Entities</span></div><div class="stat"><strong id="edgeCount">0</strong><span>Relationships</span></div><div class="stat"><strong id="typeCount">0</strong><span>Categories</span></div></div></section>
+<section class="workspace">
+<aside class="panel side"><h2 class="section-title">Find entities</h2><input class="search" id="search" placeholder="Search Python, AI, Vinu..." aria-label="Search entities"><div class="filters" id="filters"></div><h2 class="section-title">Entities <span id="listCount"></span></h2><div class="entity-list" id="entityList"></div><p class="hint">Choose a category to filter. Select an entity to inspect its description and direct relationships.</p></aside>
+<section class="panel graph-panel"><div class="graph-head"><h2>Relationship map</h2><div class="actions"><button class="btn" id="reset" type="button">Reset</button><button class="btn" id="pathMode" type="button">Find path</button><button class="btn primary" id="showAll" type="button">Show all</button></div></div><div class="canvas"><svg id="graph" viewBox="0 0 760 500" role="img" aria-label="Interactive knowledge graph"></svg></div><div class="legend"><span><i style="background:#8b7cff"></i>Person</span><span><i style="background:#16aaa4"></i>Technology</span><span><i style="background:#d49d25"></i>Concept</span><span><i style="background:#d95791"></i>Project</span><span><i style="background:#5289df"></i>Team</span></div><div class="pathout" id="pathOutput">Select “Find path”, then choose two entities to discover how they connect.</div></section>
+<aside class="panel detail"><div class="detail-inner"><h2 class="section-title">Entity inspector</h2><div id="details"><div class="detail-card"><span class="tag">GET STARTED</span><div class="detail-name">Select a node</div><p class="muted">Click a circle or entity name to inspect it.</p></div></div><div><h2 class="section-title">Graph facts</h2><p class="muted" id="facts" style="font-size:12px">This sample graph contains connected software and AI concepts.</p></div></div></aside>
+</section>
+<section class="panel chat"><div class="chat-grid"><div><h2>Ask the graph</h2><p>Ask about an entity or how two entities connect. Answers come from the local graph data, not a live AI model.</p><div class="messages" id="messages" aria-live="polite"><div class="bubble">Hi! Try “What is connected to Python?” or “How are Python and AI connected?”</div></div><form class="askrow" id="askForm"><input class="search" id="question" placeholder="Ask a question about this graph..." required><button class="btn primary">Ask</button></form><div class="examples"><button class="chip" data-q="What is connected to Python?" type="button">Python connections</button><button class="chip" data-q="How are Python and AI connected?" type="button">Python → AI path</button><button class="chip" data-q="Tell me about React" type="button">About React</button></div></div><div><h2>How the assistant thinks</h2><p>It matches entity names, checks the relationship list, and builds an answer from graph facts.</p><div class="detail-card"><span class="tag">QUERY PIPELINE</span><div class="relation">1. Identify entity names in the question</div><div class="relation">2. Retrieve matching nodes and edges</div><div class="relation">3. Use breadth-first search for a path</div><div class="relation">4. Explain the path with relationship labels</div></div><p class="muted">A production GraphRAG system can add a graph database, semantic retrieval and a language model.</p></div></div></section>
+<section class="panel learn"><h2>How this project works</h2><p>Follow the data from stored facts to the answer displayed above.</p><div class="steps"><div class="step"><b>01 · DATA</b>Entities and relationships are stored as JavaScript objects.</div><div class="step"><b>02 · GRAPH</b>SVG draws each entity as a node and each relationship as an edge.</div><div class="step"><b>03 · RETRIEVAL</b>Search filters nodes; BFS finds a shortest connection path.</div><div class="step"><b>04 · RESPONSE</b>The interface explains the path using real relationship labels.</div></div></section>
+<div class="foot">HTML · CSS · SVG · Vanilla JavaScript · Sample educational dataset · No external API required</div>
+</main>
+<script>
+const nodes=[
+{id:'vinu',name:'Vinu',type:'Person',desc:'A sample learner and developer exploring software engineering and AI.',x:115,y:100},
+{id:'meera',name:'Meera',type:'Person',desc:'A sample teammate in the learning graph.',x:110,y:390},
+{id:'python',name:'Python',type:'Technology',desc:'A general-purpose programming language used in automation, data science and AI.',x:290,y:90},
+{id:'javascript',name:'JavaScript',type:'Technology',desc:'A programming language used to build interactive web experiences.',x:290,y:250},
+{id:'react',name:'React',type:'Technology',desc:'A JavaScript library for building component-based user interfaces.',x:475,y:180},
+{id:'neo4j',name:'Neo4j',type:'Technology',desc:'A graph database designed to store and query connected data.',x:480,y:370},
+{id:'ai',name:'Artificial Intelligence',type:'Concept',desc:'The field of building systems that perform tasks associated with human intelligence.',x:650,y:80},
+{id:'ml',name:'Machine Learning',type:'Concept',desc:'A subfield of AI in which systems learn patterns from data.',x:650,y:250},
+{id:'graphrag',name:'GraphRAG',type:'Concept',desc:'An approach combining graph-based retrieval with language-model generation.',x:650,y:420},
+{id:'portal',name:'Student Portal',type:'Project',desc:'A sample web application for student information and academic workflows.',x:290,y:430},
+{id:'webteam',name:'Web Team',type:'Team',desc:'A sample team focused on web application development.',x:115,y:250}
+];
+const edges=[
+{from:'vinu',to:'python',label:'USES'},{from:'vinu',to:'webteam',label:'MEMBER OF'},{from:'meera',to:'webteam',label:'MEMBER OF'},
+{from:'webteam',to:'portal',label:'BUILDS'},{from:'portal',to:'react',label:'BUILT WITH'},{from:'portal',to:'javascript',label:'USES'},
+{from:'javascript',to:'react',label:'FOUNDATION FOR'},{from:'python',to:'ml',label:'USED IN'},{from:'ml',to:'ai',label:'SUBFIELD OF'},
+{from:'ai',to:'graphrag',label:'CAN POWER'},{from:'neo4j',to:'graphrag',label:'STORES GRAPH FOR'},{from:'python',to:'neo4j',label:'CONNECTS TO'}
+];
+const colors={Person:'#8b7cff',Technology:'#16aaa4',Concept:'#d49d25',Project:'#d95791',Team:'#5289df'};
+const $=id=>document.getElementById(id);let selected='python',filter='All',searchText='',pathMode=false,pathStart=null;
+$('nodeCount').textContent=nodes.length;$('edgeCount').textContent=edges.length;$('typeCount').textContent=new Set(nodes.map(n=>n.type)).size;
+function draw(){const svg=$('graph');svg.innerHTML='';const visibleNodes=nodes.filter(n=>(filter==='All'||n.type===filter)&&(!searchText||(n.name+' '+n.type+' '+n.desc).toLowerCase().includes(searchText)));const visible=new Set(visibleNodes.map(n=>n.id));edges.filter(e=>visible.has(e.from)&&visible.has(e.to)).forEach(e=>{const a=nodes.find(n=>n.id===e.from),b=nodes.find(n=>n.id===e.to),g=document.createElementNS('http://www.w3.org/2000/svg','g'),line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',a.x);line.setAttribute('y1',a.y);line.setAttribute('x2',b.x);line.setAttribute('y2',b.y);line.setAttribute('class','edge'+(selected&&e.from!==selected&&e.to!==selected?' dim':''));g.append(line);const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',(a.x+b.x)/2);t.setAttribute('y',(a.y+b.y)/2-7);t.setAttribute('class','edge-label');t.textContent=e.label;g.append(t);svg.append(g)});
+visibleNodes.forEach(n=>{const g=document.createElementNS('http://www.w3.org/2000/svg','g');g.setAttribute('class','node'+(n.id===selected?' active':'')+(searchText&&n.name.toLowerCase().includes(searchText)?' search-hit':''));g.setAttribute('transform','translate('+n.x+' '+n.y+')');const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('r',n.type==='Concept'?34:29);c.setAttribute('fill',colors[n.type]);g.append(c);const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('y',4);t.textContent=n.name.length>17?n.name.slice(0,15)+'…':n.name;g.append(t);g.addEventListener('click',()=>{if(pathMode){if(!pathStart){pathStart=n.id;$('pathOutput').textContent='Start: '+n.name+'. Now select the destination entity.'}else{const p=findPath(pathStart,n.id);$('pathOutput').textContent=p?p.map(id=>nodes.find(x=>x.id===id).name).join(' → '):'No path found between these entities.';pathStart=null;pathMode=false;$('pathMode').classList.remove('primary')}}else selectNode(n.id)});svg.append(g)});
+$('listCount').textContent='('+visibleNodes.length+')';renderList(visibleNodes)}
+function renderList(list){$('entityList').innerHTML='';list.forEach(n=>{const b=document.createElement('button');b.className='entity'+(n.id===selected?' selected':'');const dot=document.createElement('span');dot.className='dot';dot.style.background=colors[n.type];const label=document.createElement('span');label.textContent=n.name;b.append(dot,label);b.onclick=()=>selectNode(n.id);$('entityList').append(b)})}
+function renderFilters(){['All',...Object.keys(colors)].forEach(t=>{const b=document.createElement('button');b.className='chip'+(filter===t?' active':'');b.textContent=t;b.onclick=()=>{filter=t;renderFilters();draw()};$('filters').append(b)})}
+function selectNode(id){selected=id;const n=nodes.find(x=>x.id===id),rel=edges.filter(e=>e.from===id||e.to===id);$('details').innerHTML='';const card=document.createElement('div');card.className='detail-card';const tag=document.createElement('span');tag.className='tag';tag.textContent=n.type;const name=document.createElement('div');name.className='detail-name';name.textContent=n.name;const desc=document.createElement('p');desc.className='muted';desc.textContent=n.desc;card.append(tag,name,desc);$('details').append(card);const heading=document.createElement('h2');heading.className='section-title';heading.textContent='Direct relationships ('+rel.length+')';$('details').append(heading);rel.forEach(e=>{const other=nodes.find(x=>x.id===(e.from===id?e.to:e.from)),r=document.createElement('div');r.className='relation';r.textContent=(e.from===id?'→ ':'← ')+e.label+' · '+other.name;$('details').append(r)});$('facts').textContent=n.name+' has '+rel.length+' direct relationship(s) in this sample graph.';draw()}
+function findPath(start,end){const queue=[[start]],seen=new Set([start]);while(queue.length){const path=queue.shift(),last=path[path.length-1];if(last===end)return path;edges.filter(e=>e.from===last||e.to===last).forEach(e=>{const next=e.from===last?e.to:e.from;if(!seen.has(next)){seen.add(next);queue.push(path.concat(next))}})}return null}
+function addMsg(text,who,source){const d=document.createElement('div');d.className='bubble '+who;d.textContent=text;if(source){const s=document.createElement('small');s.textContent=source;d.append(s)}$('messages').append(d);$('messages').scrollTop=$('messages').scrollHeight}
+function answer(q){const low=q.toLowerCase(),matches=nodes.filter(n=>low.includes(n.name.toLowerCase()));if(matches.length>=2){const p=findPath(matches[0].id,matches[1].id);if(!p)return{text:'I could not find a connection between '+matches[0].name+' and '+matches[1].name+'.',source:'No path found in the current graph.'};const route=[];for(let i=0;i<p.length-1;i++){const e=edges.find(e=>(e.from===p[i]&&e.to===p[i+1])||(e.to===p[i]&&e.from===p[i+1]));route.push(nodes.find(n=>n.id===p[i]).name+' —'+e.label+'→ '+nodes.find(n=>n.id===p[i+1]).name)}return{text:'I found a path with '+(p.length-1)+' relationship(s): '+p.map(id=>nodes.find(n=>n.id===id).name).join(' → ')+'.',source:route.join(' | ')}}if(matches.length===1){const n=matches[0],rels=edges.filter(e=>e.from===n.id||e.to===n.id);return{text:n.name+': '+n.desc+' Direct connections: '+(rels.map(e=>nodes.find(x=>x.id===(e.from===n.id?e.to:e.from)).name).join(', ')||'none')+'.',source:'Retrieved '+rels.length+' adjacent relationship(s) from the graph.'}}return{text:'I could not match an entity name. Try Python, React, AI, Machine Learning, Neo4j, GraphRAG, Vinu or Student Portal.',source:'No entity match found.'}}
+$('search').addEventListener('input',e=>{searchText=e.target.value.trim().toLowerCase();draw()});
+$('reset').onclick=()=>{filter='All';searchText='';$('search').value='';selected='python';$('filters').innerHTML='';renderFilters();selectNode('python');$('pathOutput').textContent='View reset. Choose Find path to trace two entities.'};
+$('showAll').onclick=()=>{filter='All';searchText='';$('search').value='';$('filters').innerHTML='';renderFilters();draw()};
+$('pathMode').onclick=()=>{pathMode=!pathMode;pathStart=null;$('pathMode').classList.toggle('primary',pathMode);$('pathOutput').textContent=pathMode?'Path mode: select a starting node, then a destination node.':'Path mode off.'};
+$('askForm').addEventListener('submit',e=>{e.preventDefault();const q=$('question').value.trim();if(!q)return;addMsg(q,'user');const a=answer(q);addMsg(a.text,'',a.source);$('question').value='';const hit=nodes.find(n=>q.toLowerCase().includes(n.name.toLowerCase()));if(hit)selectNode(hit.id)});
+document.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{$('question').value=b.dataset.q;$('askForm').requestSubmit()});
+$('themeToggle').onclick=()=>{const light=document.documentElement.dataset.theme!=='light';document.documentElement.dataset.theme=light?'light':'dark';$('themeToggle').textContent=light?'☾ Dark mode':'☀ Light mode';try{localStorage.setItem('kg-theme',light?'light':'dark')}catch(e){}};
+try{if(localStorage.getItem('kg-theme')==='light'){$('themeToggle').click()}}catch(e){}
+renderFilters();selectNode('python');
+</script>
+</body></html>
