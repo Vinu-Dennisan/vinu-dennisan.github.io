@@ -6,12 +6,13 @@ beforeEach(() => {
   window.localStorage.clear();
 });
 
-test('adds a student and keeps the record in browser storage', () => {
+test('shows fictional sample profiles and adds a new student to browser storage', () => {
   render(<Students />);
+  expect(screen.getByText('Aarav Kumar')).toBeInTheDocument();
   fireEvent.change(screen.getByPlaceholderText(/alex johnson/i), { target: { value: 'Alex Johnson' } });
   fireEvent.change(screen.getByPlaceholderText(/computer science/i), { target: { value: 'Computer Science' } });
   fireEvent.click(screen.getByRole('button', { name: /add student/i }));
 
   expect(screen.getByText('Alex Johnson')).toBeInTheDocument();
-  expect(JSON.parse(window.localStorage.getItem('vinu-student-portal-students'))).toHaveLength(1);
+  expect(JSON.parse(window.localStorage.getItem('vinu-student-portal-students'))).toHaveLength(6);
 });
