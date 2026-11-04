@@ -1,42 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
-import './About.css';
-
-function About() {
-  const [showDetails, setShowDetails] = useState(false);
-  const [timeSpent, setTimeSpent] = useState(0);
-  const intervalRef = useRef(null);
-
-  // useEffect as componentDidMount + cleanup
-  useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      setTimeSpent((prev) => prev + 1);
-    }, 1000);
-
-    return () => {
-      clearInterval(intervalRef.current); // cleanup like componentWillUnmount
-    };
-  }, []);
-
-  return (
-    <div className="about-container">
-      <h2>About This App</h2>
-      <p>This React app demonstrates all key concepts in a real-world project.</p>
-
-      <p>You’ve been on this page for <strong>{timeSpent}</strong> seconds.</p>
-
-      <button onClick={() => setShowDetails((prev) => !prev)}>
-        {showDetails ? 'Hide' : 'Show'} Developer Info
-      </button>
-
-      {showDetails && (
-        <div className="dev-info">
-          <h3>Developer</h3>
-          <p>Name: Sharmi</p>
-          <p>Role: Full Stack Developer</p>
-        </div>
-      )}
-    </div>
-  );
+import React from 'react';
+export default function About() {
+  return <section className="about-page"><span className="eyebrow">ABOUT THE PROJECT</span><h2>A simple student record manager</h2>
+    <p>This Student Portal is a front-end demonstration built with React. It provides a simple interface to add, search and remove student records.</p>
+    <div className="about-panel"><h3>What this demo includes</h3><ul><li>Responsive layout for desktop and mobile screens</li><li>Student name, course and optional email fields</li><li>Search and remove actions</li><li>Browser-based local storage to keep records after refresh</li></ul></div>
+    <p className="storage-note">Important: this is not a production student information system. It has no server, shared database, login or access controls.</p>
+  </section>;
 }
-
-export default About;
