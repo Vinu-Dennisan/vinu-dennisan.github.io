@@ -1,16 +1,23 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
+const samples = [
+  { id: 'sample-1', name: 'Aarav Kumar', course: 'B.Sc. Computer Science' },
+  { id: 'sample-2', name: 'Meera Sharma', course: 'B.Com. Accounting' },
+  { id: 'sample-3', name: 'Rohan Patel', course: 'BCA' },
+  { id: 'sample-4', name: 'Ananya Iyer', course: 'B.Sc. Mathematics' },
+  { id: 'sample-5', name: 'Kabir Singh', course: 'BBA' }
+];
 export default function Home() {
-  return <section className="hero">
-    <span className="eyebrow">VINU'S STUDENT COMMUNITY</span>
-    <h2>Welcome to Vinu's Portal</h2>
-    <p className="hero-copy">A friendly place to explore the student directory and keep student information organised. Browse sample profiles, add new students, and find records with ease.</p>
-    <Link className="primary-link" to="/students">Explore student directory <span aria-hidden="true">→</span></Link>
-    <div className="feature-grid">
-      <article className="feature-card"><span className="feature-icon">＋</span><h3>Add students</h3><p>Create a student record with a name, course and optional email address.</p></article>
-      <article className="feature-card"><span className="feature-icon">⌕</span><h3>Explore profiles</h3><p>Browse and search the sample student directory by name or course.</p></article>
-      <article className="feature-card"><span className="feature-icon">✓</span><h3>Easy to manage</h3><p>Update your directory by adding or removing records saved in this browser.</p></article>
-    </div>
-    <p className="storage-note">The directory starts with fictional sample profiles to demonstrate the portal. Records are stored locally in this browser only; there is no online database.</p>
+  const students = useMemo(() => { try { const data = JSON.parse(localStorage.getItem('vinu-student-portal-students')); return Array.isArray(data) && data.length ? data : samples; } catch { return samples; } }, []);
+  const attendance = useMemo(() => { try { return JSON.parse(localStorage.getItem('vinu-attendance')) || {}; } catch { return {}; } }, []);
+  const notices = useMemo(() => { try { const data = JSON.parse(localStorage.getItem('vinu-portal-notices')); return Array.isArray(data) ? data.length : 3; } catch { return 3; } }, []);
+  const present = students.filter(s => attendance[s.id] === 'Present').length;
+  const courses = [...new Set(students.map(s => s.course))].length;
+  const recent = students.slice(0, 4);
+  return <section className="dashboard"><div className="welcome-banner"><div><span className="eyebrow">YOUR CAMPUS, ONE PLACE</span><h1>Good to see you.<br/><span>Welcome to Vinu's Portal.</span></h1><p>Your student community hub to manage profiles, attendance, classes and campus updates.</p><div className="welcome-actions"><Link className="primary-link" to="/students">Explore students <span>→</span></Link><Link className="subtle-link" to="/attendance">Take attendance</Link></div></div><div className="welcome-art" aria-hidden="true"><div className="orbit orbit-one"></div><div className="orbit orbit-two"></div><div className="art-core">V<span>✦</span></div><div className="float-tag tag-top">✧ Learn</div><div className="float-tag tag-bottom">✦ Grow</div></div></div>
+    <div className="dashboard-section-head"><div><span className="eyebrow">AT A GLANCE</span><h2>Portal overview</h2></div><span className="date-chip">LIVE LOCAL SUMMARY</span></div>
+    <div className="stats-grid"><article className="stat-card"><div className="stat-icon violet">♙</div><span>Total students</span><strong>{students.length}</strong><small>Profiles in your directory</small><div className="stat-accent"></div></article><article className="stat-card"><div className="stat-icon cyan">▤</div><span>Courses represented</span><strong>{courses}</strong><small>Unique programmes</small><div className="stat-accent cyan-accent"></div></article><article className="stat-card"><div className="stat-icon green">✓</div><span>Present today</span><strong>{present}</strong><small>Attendance marked present</small><div className="stat-accent green-accent"></div></article><article className="stat-card"><div className="stat-icon amber">▣</div><span>Notice board</span><strong>{notices}</strong><small>Campus announcements</small><div className="stat-accent amber-accent"></div></article></div>
+    <div className="dashboard-lower"><section className="panel recent-panel"><div className="panel-heading"><div><span className="eyebrow">DIRECTORY</span><h2>Recently added students</h2></div><Link className="panel-link" to="/students">View all →</Link></div>{recent.map(s => <div className="mini-student" key={s.id}><div className="student-avatar">{s.name.charAt(0)}</div><div className="student-details"><strong>{s.name}</strong><span>{s.course}</span></div><span className="mini-arrow">↗</span></div>)}</section><section className="panel quick-panel"><div className="panel-heading"><div><span className="eyebrow">SHORTCUTS</span><h2>Quick actions</h2></div></div><Link to="/students" className="quick-action"><span className="quick-icon">＋</span><span><b>Add a student</b><small>Create a new student profile</small></span><i>→</i></Link><Link to="/attendance" className="quick-action"><span className="quick-icon">✓</span><span><b>Mark attendance</b><small>Update today's class register</small></span><i>→</i></Link><Link to="/timetable" className="quick-action"><span className="quick-icon">▦</span><span><b>View timetable</b><small>Plan the week ahead</small></span><i>→</i></Link><Link to="/notices" className="quick-action"><span className="quick-icon">◉</span><span><b>Post an announcement</b><small>Share a campus update</small></span><i>→</i></Link></section></div>
+    <p className="muted-note">Demo portal · Sample student profiles are fictional. Data is stored locally in this browser and is not shared across devices.</p>
   </section>;
 }
