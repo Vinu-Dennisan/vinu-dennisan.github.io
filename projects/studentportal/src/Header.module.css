@@ -1,13 +1,1 @@
-.header {
-  background-color: #bf9fed;
-  color: white;
-  padding: 1rem;
-  text-align: center;
-  font-size: 24px;
-}
-
-
-.navLinks {
-  display: flex;
-  gap: 1rem;
-}
+.header{background:#fff;border-bottom:1px solid #e8edf3}.inner{width:min(1080px,calc(100% - 40px));min-height:76px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px}.brand{display:flex;align-items:center;gap:11px;color:#17243a;text-decoration:none;font-size:17px;font-weight:800}.brand small{display:block;margin-top:3px;color:#8490a3;font-size:9px;letter-spacing:1.5px}.brandMark{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;color:#fff;background:#3457d5;font-size:20px}.navLinks{display:flex;align-items:center;gap:8px}.navLinks a{padding:10px 14px;border-radius:9px;color:#64718a;text-decoration:none;font-size:14px;font-weight:650}.navLinks a:hover,.navLinks a.active{color:#2949c4;background:#eef2ff}@media(max-width:560px){.inner{width:calc(100% - 28px);min-height:68px;gap:8px}.brand{font-size:14px;gap:8px}.brandMark{width:34px;height:34px}.navLinks{gap:0}.navLinks a{padding:9px 8px;font-size:12px}}
