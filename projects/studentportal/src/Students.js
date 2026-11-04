@@ -8,8 +8,14 @@ const SAMPLE_STUDENTS = [
   { id: 'sample-5', name: 'Kabir Singh', course: 'BBA', email: 'kabir.singh@example.com' }
 ];
 function readStudents() {
-  try { const saved = window.localStorage.getItem(STORAGE_KEY); return saved === null ? SAMPLE_STUDENTS : JSON.parse(saved); }
-  catch { return SAMPLE_STUDENTS; }
+  try {
+    const saved = window.localStorage.getItem(STORAGE_KEY);
+    if (saved === null) return SAMPLE_STUDENTS;
+    const parsed = JSON.parse(saved);
+    return Array.isArray(parsed) && parsed.length > 0 ? parsed : SAMPLE_STUDENTS;
+  } catch {
+    return SAMPLE_STUDENTS;
+  }
 }
 export default function Students() {
   const [students, setStudents] = useState(readStudents);
