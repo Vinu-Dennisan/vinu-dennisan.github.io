@@ -41,6 +41,10 @@ jobs:
         working-directory: projects/studentportal
         run: npm ci --legacy-peer-deps
 
+      - name: Test Student Portal
+        working-directory: projects/studentportal
+        run: npm test -- --watchAll=false
+
       - name: Build Student Portal
         working-directory: projects/studentportal
         run: npm run build
