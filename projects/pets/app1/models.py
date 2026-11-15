@@ -37,7 +37,7 @@ class Bunnies(models.Model):
 class Cats(models.Model):
     c_id = models.DecimalField(max_digits=10, decimal_places=2)
     cat_name = models.CharField(max_length=255)
-    price = models.PositiveIntegerField()
+    price = models.IntegerField()
     cat_age = models.IntegerField()
     cat_breed = models.CharField(max_length=255)
     cat_image = models.ImageField(upload_to="pet_images")
@@ -47,7 +47,7 @@ class Cats(models.Model):
 class Hamster(models.Model):
     h_id = models.DecimalField(max_digits=10, decimal_places=2)
     h_name = models.CharField(max_length=255)
-    price = models.PositiveIntegerField()
+    price = models.IntegerField()
     h_age = models.IntegerField()
     h_breed = models.CharField(max_length=255)
     h_image = models.ImageField(upload_to="pet_images")
