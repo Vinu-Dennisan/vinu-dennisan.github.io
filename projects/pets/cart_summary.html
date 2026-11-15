@@ -1,21 +1,22 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Cart Summary</title>
-</head>
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cart Summary</title></head>
 <body>
-    
-    <h1>Cart Summary</h1>
-    <form>
-        {% csrf_token %}
-    <ul>
-    {% for item in cart_items %}
-    
-        <li>{{ item.dog.dog_name }} - Quantity: {{ item.quantity }} - Price: {{ item.dog.price }}</li>
-    {% empty %}
-        <li>Your cart is empty.</li>
-    {% endfor %}
-    </ul>
-</form>
+  <main>
+    <h1>Your shopping cart</h1>
+    {% if messages %}{% for message in messages %}<p>{{ message }}</p>{% endfor %}{% endif %}
+    {% if cart_items %}
+      <ul>
+      {% for item in cart_items %}
+        <li>{{ item.pet_name }} — Qty: {{ item.quantity }} — ₹{{ item.pet_price }}</li>
+      {% endfor %}
+      </ul>
+      <h2>Total: ₹{{ total_price }}</h2>
+      <a href="{% url 'buy' %}">Continue</a>
+    {% else %}
+      <p>Your cart is empty.</p>
+    {% endif %}
+    <p><a href="{% url 'vpets' %}">Continue browsing</a></p>
+  </main>
 </body>
 </html>
