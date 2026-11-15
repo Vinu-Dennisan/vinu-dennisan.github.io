@@ -5,7 +5,7 @@
 <p>Price: {{ dog.price }}</p>
 <p>Pet Age: {{ dog.age }}</p>
 <p>Pet Breed: {{ dog.breed }}</p>
-<form action="{% url 'add_to_cart' %}" method="post">
+<form action="{% url 'add_to_cart' 'dogs' dog.id %}" method="post">
     {% csrf_token %}
     <button type="submit">Add to Cart</button>
 </form>
