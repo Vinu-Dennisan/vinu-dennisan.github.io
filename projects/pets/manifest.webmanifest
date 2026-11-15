@@ -1,0 +1,41 @@
+{
+  "id": "./",
+  "name": "Vinu's Pets",
+  "short_name": "Vinu's Pets",
+  "description": "Discover animal profiles and explore pet care resources.",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "portrait-primary",
+  "background_color": "#f6f7fb",
+  "theme_color": "#176b50",
+  "categories": [
+    "lifestyle",
+    "shopping"
+  ],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Meet the pets",
+      "short_name": "Pets",
+      "url": "./#pets"
+    },
+    {
+      "name": "Animal platforms",
+      "short_name": "Platforms",
+      "url": "./#animal-platforms"
+    }
+  ]
+}
