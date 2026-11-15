@@ -77,7 +77,7 @@
 							<!-- Add to cart form -->
 	
 		
-		<form action="{% url 'cart' %}" method="post">	
+		<form action="{% url 'add_to_cart' 'dogs' dog.id %}" method="post">	
 			<input type="submit" value="Add to Cart">
 		</form>
 		<!-- Buy pet form -->
