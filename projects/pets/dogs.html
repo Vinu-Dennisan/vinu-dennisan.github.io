@@ -47,7 +47,7 @@
         <div class="nav">
             <h1><img src="https://img.freepik.com/premium-vector/pet-shop-logo-design-icon-illustration-template-vector-with-modern-concept_661040-3002.jpg?ga=GA1.1.1255900431.1721895757&semt=ais_user" height="50px" width="50px"></h1>
             <li style="padding-left: 75rem;"><a href="{% url 'home' %}">Home</a></li>
-			<li style="padding-left: 60px;"><a href="">View Cart</a></li>
+			<li style="padding-left: 60px;"><a href="{% url 'cart_summary' %}">View Cart</a></li>
             
         </div>
   	{% block content %}
@@ -77,7 +77,7 @@
 							<!-- Add to cart form -->
 	
 		
-		<form action="{% url 'add_to_cart' 'dogs' dog.id %}" method="post">	
+		<form action="{% url 'add_to_cart' 'dogs' dog.id %}" method="post">\n                            {% csrf_token %}	
 			<input type="submit" value="Add to Cart">
 		</form>
 		<!-- Buy pet form -->
