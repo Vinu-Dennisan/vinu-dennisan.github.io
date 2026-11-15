@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+<script>
+    function validateForm() {
+        const password1 = document.querySelector('input[name="password1"]').value;
+        const password2 = document.querySelector('input[name="password2"]').value;
+
+        if (password1 !== password2) {
+            alert("Passwords do not match!");
+            return false; // Prevent form submission
+        }
+        return true; // Allow form submission
+    }
+</script>
+<style>
+    label {
+        color: darkorchid;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+    input {
+        color: rgb(66, 118, 145);
+    }
+    h1 {
+        text-align: center;
+        color: rgb(23, 10, 13);
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+    .container {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+        align-items: center;
+        border-color: aqua;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(92, 79, 79, 0.1);
+    }
+    img {
+        max-width: 100%;
+        height: min-content;
+        float: left;
+    }
+</style>
+<br><br>
+<h1>Register Here</h1>
+<br><br>
+<img src="https://img.freepik.com/premium-vector/pets-home-vector-logo-design-illustration_628995-466.jpg?ga=GA1.2.1255900431.1721895757&semt=ais_hybrid" width="500px" height="500px" alt="Sample Image" class="right-image">
+
+<div class="container">
+    <form action="{% url 'registration' %}"  method="post" onsubmit="return validateForm()">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Name</label>
+            <input name="name" type="text" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label>Username</label>
+            <input name="username" type="text" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label>Gender</label>
+            <select id="gender" name="gender" required>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+                <option value="O">Other</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Address</label>
+            <input name="address" type="text" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label>Phone</label>
+            <input name="phone" type="number" class="form-control" required  pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number.">
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input name="email" type="email" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input name="password1" type="password" class="form-control" required minlength="8" title="Password must be at least 8 characters long.">
+        </div>
+        <div class="form-group">
+            <label>Confirm Password</label>
+            <input name="password2" type="password" class="form-control" required  minlength="8" title="Please confirm your password.">
+        </div>
+        <button type="submit" class="btn btn-info">Register</button>
+    </form>
+    <br>
+</div>
+<br><br>
+
+{% endblock %}

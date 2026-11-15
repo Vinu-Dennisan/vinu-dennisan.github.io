@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        
+        .nav {
+            background-color: rgb(118, 194, 195);
+            text-align: right;
+            padding: 5px;
+        }
+        li{
+            display: inline-block;
+            padding: 25px;
+            text-decoration: none;
+            text-align: right;
+        }
+        a{
+            text-decoration: none;
+            font-size: 20px;
+            color: rgb(16, 20, 23);
+            /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            text-align: right;
+            
+        }
+        a:hover{
+            color: rgb(149, 129, 129);
+        }
+        footer{
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            top: 97.3%;
+            width: 97.3%;
+            
+        }
+    </style>
+    
+    <title>Document</title>
+</head>
+<body>
+    
+
+    {% block content %}
+    <ul class="nav">
+        
+        <li><a href="{% url 'logout' %}">Logout</a></li>
+        <li><a href="{% url 'vpets' %}">viewpets</a></li>
+    </ul><br>
+    <center>
+        <center>
+            <h1>welcome {{ request.user.username }}</h1><br>
+            <h3>Find your new friend here</h3><br><br>
+        </center>
+    <img src="https://th.bing.com/th/id/R.9d2d226fb1ecafc91e043e7561747b2b?rik=8e0RCC42bhPO9Q&riu=http%3a%2f%2fwww.barefoothealing.com.au%2fassets%2fimages%2f5-pets-cutout.jpg&ehk=cQ4Pr5gJVZo4PxY0j%2bfbAU4pTjHBGuIppQ%2bb%2bNfKqVE%3d&risl=&pid=ImgRaw&r=0" height="600" width="1000">
+    
+    <br><br>
+    </center>
+    {% endblock %}
+   <footer style="background-color: rgb(172, 233, 235);">&copy;PET SHOP </footer>
+</body>
+</html>

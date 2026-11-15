@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cart Summary</title>
+</head>
+<body>
+    
+    <h1>Cart Summary</h1>
+    <form>
+        {% csrf_token %}
+    <ul>
+    {% for item in cart_items %}
+    
+        <li>{{ item.dog.dog_name }} - Quantity: {{ item.quantity }} - Price: {{ item.dog.price }}</li>
+    {% empty %}
+        <li>Your cart is empty.</li>
+    {% endfor %}
+    </ul>
+</form>
+</body>
+</html>

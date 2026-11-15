@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>View pets</title>
+	<link rel="stylesheet" href="{% static 'css/vpets.css' %}">
+</head>
+	
+<body>
+	{% block content %}
+	<ul class="nav">
+		<h1><img src="https://img.freepik.com/premium-vector/pet-shop-logo-design-icon-illustration-template-vector-with-modern-concept_661040-3002.jpg?ga=GA1.1.1255900431.1721895757&semt=ais_user" height="50px" width="50px"></h1>
+		
+		<li style="padding-left: 60px;"><a href="{% url 'cart_summary' %}">View Cart</a></li>
+
+        <li><a href="{% url 'logout' %}">Logout</a></li>
+	</ul>
+	
+	<br><br>
+         <h2><center><b>PETS CATEGORY</b></center></h2>
+      <br><br>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-3">
+				<div class="card" style="width: 100px height: 100px "><center>
+					<img src="https://th.bing.com/th/id/OIP.MypgAuRBAJRDRxfT7NWaYQAAAA?pid=ImgDet&w=184&h=278&c=7&dpr=1.3" height="200px" width="200px" class="card-img-top" alt="..." >
+					</center>
+					<div class="card-body">
+					  <p class="card-text">
+						<!--<p class="card-text">
+							<div class="pet-info">
+								<h4>Pet Name: Max</h4>
+								<p>Pet Type: Dog</p>
+								<p>Pet Age: 3 years</p>
+								<p>Pet Breed: Golden Retriever</p>
+							</div>-->
+							<h4>Dogs Breeds</h4></p>
+					</div>
+					<a  href="dogs">see here</a>
+				 </div>   
+			</div>
+		<div class="col-sm-3">
+			<div class="card" style="width:100px height: 100px"><center>
+				<img src="data:image/jpeg;base64,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" height="200px" width="80px" class="card-img-top" alt="...">
+				</center>
+				<div class="card-body">
+				  <p class="card-text">
+					<!--<p class="card-text">
+						<div class="pet-info">
+							<h4>Pet Name: Judy</h4>
+							<p>Pet Type: Bunnies</p>
+							<p>Pet Age: Baby</p>
+							<p>Pet Breed: Mini Rex</p>
+						</div>-->
+						<h4>Bunnies Breeds</h4>
+				</div>
+				<a href="bunnies">see here</a>	
+			</div>
+		</div>
+		<div class="col-sm-3">
+		  <div class="card" style="width: 100px height: 100px"><center>
+			  <img src="https://th.bing.com/th/id/OIP.oeMaXjVcFFaf8C4qe84ehQHaGS?w=206&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7" height="200px" width="200px" class="card-img-top" alt="...">
+			  </center>
+			  <div class="card-body">
+				<p class="card-text"><h4>Cats Breeds</h2> </h2>
+			  </div>
+			  <a href="cats">see here</a> 
+		   </div>   
+		</div>
+		<div class="col-sm-3">
+			<div class="card" style="width: 100px height: 100px"><center>
+				<img src="https://th.bing.com/th/id/OIP.GnlX5RKqm4CoQSaik4gKCgHaHa?pid=ImgDet&w=184&h=184&c=7&dpr=1.3" height="200px" width="200px" class="card-img-top" alt="...">
+				</center>
+				<div class="card-body">
+				  <p class="card-text"><h4> Hamster Breeds</h4> 
+				</div>
+				<a href="hamster">see here</a>	
+			 </div>   
+		  </div>    
+        </div>
+	</div>  
+{% endblock %}
+<footer style="background-color: rgb(172, 233, 235);">&copy;PET SHOP </footer>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <style>
+.nav {
+    display: flex;
+    align-items: center;
+    background-color: rgb(237, 200, 235);
+    text-align: right;
+    padding: 5px;
+           
+}
+
+.nav ul {
+    list-style-type: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    padding-right: 120px;
+}
+
+.nav li {
+    margin: 0 15px;
+    display: inline-block;
+    padding: 30px;
+    text-decoration: none;
+    text-align: right;           
+    
+}
+
+.nav a {
+    text-decoration: none;
+    color: blueviolet;
+    font-size: 16px;
+}
+
+.nav a:hover {
+    text-decoration: underline;
+}
+       
+      
+a {
+     text-decoration: none;
+     font-size: 20px;
+     color: rgba(124, 14, 14, 0.886);
+     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+     text-align: right;
+}
+a:hover {
+     color: Success;
+}
+footer {
+      bottom: 0PX;
+      padding: 40px;
+      text-align: center;
+      width: 100%;
+      background-color: rgb(236, 183, 222);
+      color: #fff;
+      margin-top: 150px;
+}
+    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    
+    
+
+    <title>Document</title>
+</head>
+<body>
+    <div class="nav">
+      <h1><img src="https://img.freepik.com/premium-vector/pet-shop-logo-design-icon-illustration-template-vector-with-modern-concept_661040-3002.jpg?ga=GA1.1.1255900431.1721895757&semt=ais_user" height="50px" width="50px"></h1>
+       <ul>
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+         <h3><li><i class='bx bxs-home'></i><a style="color:blueviolet" href="{% url 'home' %}">Home</a></li></h3>
+         <h3><li><a style="color:blueviolet" href="{% url 'about' %}">About Pets</a></li></h3>
+         <h3><li><a style="color:blueviolet" href="{% url 'registration' %}">Registration</a></li></h3>
+         <h3><li><a style="color:blueviolet" href="{% url 'login' %}">Signin</a></li></h3>
+         <h3><li><a style="color:blueviolet" href="{% url 'contact' %}">Contact Us</a></li></h3>
+      </ul>
+    </div>
+    {% block content %}<br><br>
+    <!-- Carousel and other content here -->
+    <div class="container">
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+              
+            <ol class="carousel-indicators">
+                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+               
+              </ol>
+              
+              <div class="carousel-inner">     
+                     
+                <div class="carousel-item active">
+                  <img width="400px" height="600px" src="https://www.baldivisvet.com.au/wp-content/uploads/2017/11/kittens-white1920.jpg" class="d-block w-100" alt="..." >
+                </div>
+                <div class="carousel-item">
+                  <img width="400px" height="600px" src="https://img.freepik.com/free-photo/three-carried-puppies-siberian-husky-dogs-playing-sitting-floor-lying-waiting-food-looking-away-pretty-cute-group-dogs-with-white-gray-fur-blue-eyes-like-wolf_7502-5592.jpg?ga=GA1.1.1255900431.1721895757&semt=ais_user" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item">
+                  <img width="200px" height="600px" src="https://www.worldatlas.com/r/w1200-q80/upload/8b/72/3e/shutterstock-690150508.jpg" class="d-block w-100" alt="...">
+                </div>
+              </div>
+              <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+              <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+              </a>
+            </div>
+          </div><br><br><br><br><br>
+        
+          <div class="container">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="card" style="width: 100px height: 100px "><center>
+                        <img src="https://t4.ftcdn.net/jpg/08/51/52/13/240_F_851521393_5Q4488qP6iwAG64LgPdCnRvlkGdxuRUj.jpg" height="200px" width="200px" class="card-img-top" alt="..." >
+                        
+                        </center>
+                        <div class="card-body">
+                          <p class="card-text"><h2>Lovely Dogs</h2>
+                                                
+                        </div>
+                        
+                     </div>   
+                </div>
+            
+            
+            <div class="col-sm-3">
+            
+                <div class="card" style="width:100px height: 100px"><center>
+                    <img src="https://t4.ftcdn.net/jpg/08/66/00/85/240_F_866008584_A7iJb45Vs3OlPvUygFS9d9H8Tvt6U41m.jpg" height="200px" width="200px" class="card-img-top" alt="...">
+                    </center>
+                    <div class="card-body">
+                      <p class="card-text"><h2>Sweet Bunnies</h2>             
+                                     
+                    </div>
+                   
+                </div>
+            </div>
+            
+            <div class="col-sm-3">
+              <div class="card" style="width: 100px height: 100px"><center>
+                  <img src="https://cache.desktopnexus.com/thumbseg/2082/2082724-bigthumbnail.jpg" height="200px" width="200px" class="card-img-top" alt="...">
+                  </center>
+                  <div class="card-body">
+                    <p class="card-text"><h2>Cute Kitties</h2> </h2>
+                     
+                      
+                  </div>
+                
+               </div>   
+            </div>
+        
+            <div class="col-sm-3">
+                <div class="card" style="width: 100px height: 100px"><center>
+                    <img src="https://img.freepik.com/premium-photo/rat-with-big-nose-big-eyes-is-loking-camera_1041227-192.jpg" height="200px" width="200px" class="card-img-top" alt="...">
+                    </center>
+                    <div class="card-body">
+                      <p class="card-text"><h2>Small Hamster</h2> </h2>
+                       
+                        
+                    </div>
+
+                 </div>   
+              </div>    
+            
+        </div>
+        </div>    <br><br><br>
+    {% endblock %}
+    <footer><a style="color:blueviolet">&copy; PET SHOP</a></footer>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+
+</body>
+</html>

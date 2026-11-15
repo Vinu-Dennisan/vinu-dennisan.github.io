@@ -1,0 +1,57 @@
+<!-- payments/templates/payments/create_order.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pay with Razorpay</title>
+</head>
+<body>
+    <button id="rzp-button">Pay</button>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        var options = {
+            "key": "{{ key_id }}",
+            "amount": "1000", // Amount in paise
+            "currency": "INR",
+            "name": "Pet Shop",
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo.jpg",
+            "order_id": "{{ order_id }}",
+            "handler": function (response){
+                // Handle the response here
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/verify_payment/', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.send('order_id=' + options.order_id + '&payment_id=' + response.razorpay_payment_id + '&signature=' + response.razorpay_signature);
+
+                xhr.onload = function () {
+                    if (xhr.status == 200) {
+                        alert('Payment successful');
+                    } else {
+                        alert('Payment failed');
+                    }
+                };
+            }
+        };
+
+        document.getElementById('rzp-button').onclick = function(e){
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/create_order/', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.send();
+
+            xhr.onload = function () {
+                if (xhr.status == 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    options.order_id = data.order_id;
+                    options.key_id = data.key_id;
+                    var rzp1 = new Razorpay(options);
+                    rzp1.open();
+                } else {
+                    alert('Failed to create order');
+                }
+            };
+        };
+    </script>
+</body>
+</html>

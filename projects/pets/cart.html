@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Your Cart</h1>
+    </header>
+    <main>
+        {% if cart_items %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                     
+                        {% if cart_items  in Dogs%}
+                        <tr>
+                           						
+                            <td>{{ dog.dog_name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>${{ dog.price }}</td>
+                            <td>{{ dog.breed }}</td>
+                            
+                        </tr>
+                        {% endif %}
+                        {% if cart_items  in Bunnies%}
+                        <tr>
+                            
+                           						
+                            <td>{{ bunnie.b_name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>${{  bunnie.price }}</td>
+                            <td>{{ bunnie.b_breed }}</td>
+                            
+                        </tr>
+                        {% endif %}
+                        {% if cart_items  in Cats %}
+                        <tr>
+                                                      						
+                            <td>{{ cat.cat_name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>${{ cat.price }}</td>
+                            <td>{{ cat.cat_breed }}</td>
+                            
+                        </tr>
+                        {% endif %}
+                        {% if cart_items  in Hamster%}
+                        <tr>
+                            	
+
+                            <td>{{ hamster.h_name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>${{ hamster.price }}</td>
+                            <td>{{  hamster.h_breed }}</td>
+                            
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div>
+                <h3>Total Price: ${{ total_price }}</h3>
+            </div>
+            <div>
+                <a href="{% url 'checkout' %}">Proceed to Checkout</a>
+            </div>
+        {% else %}
+            <p>Your cart is empty.</p>
+        {% endif %}
+    </main>
+    <footer>
+        <p>&copy; 2024 Pet Shop</p>
+    </footer>
+</body>
+</html>
