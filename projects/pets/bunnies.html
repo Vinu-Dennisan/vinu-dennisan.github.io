@@ -70,7 +70,8 @@
 								<p>Pet Breed: {{ bunnie.b_breed }}</p>
 							</div>						
 							
-                            <form action="{% url 'add_to_cart' 'bunnies' bunnie.id %}" method="post">\n                            {% csrf_token %}	
+                            <form action="{% url 'add_to_cart' 'bunnies' bunnie.id %}" method="post">
+                            {% csrf_token %}\n                            {% csrf_token %}	
                                 <input type="submit" value="Add to Cart">
                             </form>
                             <!-- Buy pet form -->
