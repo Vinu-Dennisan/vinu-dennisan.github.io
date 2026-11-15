@@ -8,8 +8,8 @@ class Profile(models.Model):
     address = models.CharField(max_length=100)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
     email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=15, blank=True)
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True)
+    phone = models.CharField(max_length=15, blank=True, null=True)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True, blank=True)
 
     def __str__(self):
         return self.user.username
@@ -18,7 +18,7 @@ class Dogs(models.Model):
     d_id = models.DecimalField(max_digits=10, decimal_places=2)
     dog_name = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    age = models.PositiveIntegerField()
+    age = models.IntegerField()
     breed = models.CharField(max_length=100)
     image = models.ImageField(upload_to="pet_images")
     def __str__(self):
@@ -27,8 +27,8 @@ class Dogs(models.Model):
 class Bunnies(models.Model):
     b_id = models.DecimalField(max_digits=10, decimal_places=2)
     b_name = models.CharField(max_length=255)
-    price = models.PositiveIntegerField()
-    b_age = models.PositiveIntegerField()
+    price = models.IntegerField()
+    b_age = models.IntegerField()
     b_breed = models.CharField(max_length=255)
     b_image = models.ImageField(upload_to="pet_images")
     def __str__(self):
@@ -38,7 +38,7 @@ class Cats(models.Model):
     c_id = models.DecimalField(max_digits=10, decimal_places=2)
     cat_name = models.CharField(max_length=255)
     price = models.PositiveIntegerField()
-    cat_age = models.PositiveIntegerField()
+    cat_age = models.IntegerField()
     cat_breed = models.CharField(max_length=255)
     cat_image = models.ImageField(upload_to="pet_images")
     def __str__(self):
@@ -48,14 +48,14 @@ class Hamster(models.Model):
     h_id = models.DecimalField(max_digits=10, decimal_places=2)
     h_name = models.CharField(max_length=255)
     price = models.PositiveIntegerField()
-    h_age = models.PositiveIntegerField()
+    h_age = models.IntegerField()
     h_breed = models.CharField(max_length=255)
     h_image = models.ImageField(upload_to="pet_images")
     def __str__(self):
         return self.h_name
 
 class Cart(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
 
