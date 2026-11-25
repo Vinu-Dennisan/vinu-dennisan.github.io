@@ -632,7 +632,7 @@ html {
     .project-count { width:100%; color:var(--muted); font-size:12px; }
     .project-card[hidden] { display:none; }
     .hero-card { border:1px solid var(--line); border-radius:24px; background:var(--glass); box-shadow:var(--shadow); }
-    .hero-card .avatar { width:132px; height:132px; border:5px solid rgba(255,255,255,.16); box-shadow:0 12px 35px rgba(130,100,230,.28); font-size:42px; }
+    .hero-card .profile-photo { width:132px; height:132px; border:5px solid rgba(255,255,255,.16); box-shadow:0 12px 35px rgba(130,100,230,.28); font-size:42px; }
     .hero-card h2 { letter-spacing:-.5px; }
     .section-heading { position:relative; }
     .section-heading:after { content:""; display:block; width:48px; height:3px; margin-top:14px; border-radius:9px; background:var(--gradient); }
@@ -693,7 +693,7 @@ html {
     .btn-secondary:hover { border-color: #d6b36a; }
     .hero-card { min-height: 390px; border: 1px solid rgba(214,179,106,.32); border-radius: 3px; background: linear-gradient(155deg,rgba(20,42,63,.92),rgba(8,20,34,.96)); box-shadow: 0 28px 75px rgba(0,0,0,.32); position: relative; }
     .hero-card:before { content:""; position:absolute; inset:12px; border:1px solid rgba(214,179,106,.14); pointer-events:none; }
-    .hero-card .avatar { width: 176px; height: 176px; flex: 0 0 176px; display: grid; place-items: center; border-radius: 50%; border: 3px solid #d6b36a; background: linear-gradient(135deg,#b88b43,#f0dba5); color: #101a26; font: 600 42px Georgia,serif; box-shadow: 0 14px 42px rgba(0,0,0,.38); margin-bottom: 24px; }
+    .hero-card .profile-photo { width: 176px; height: 176px; flex: 0 0 176px; display: block; object-fit: cover; object-position: center 25%; border-radius: 50%; border: 3px solid #d6b36a; background: #14263b; box-shadow: 0 14px 42px rgba(0,0,0,.38); margin-bottom: 24px; }
     .hero-card h2 { font-family: Georgia,serif; font-weight: 500; font-size: 24px; color:#f3e8d2; }
     .hero-card p { color:#b3bdc8; letter-spacing:.12em; text-transform:uppercase; font-size:10px; }
     section { padding-block: 68px; }
@@ -804,7 +804,7 @@ html {
         </div>
 
         <aside class="hero-card">
-          <div class="avatar" aria-label="Vinu Dennisan W initials">VDW</div>
+          <img class="profile-photo" src="vinu-photo.jpg" alt="Portrait of Vinu Dennisan W" width="176" height="176" loading="eager" decoding="async">
           <h2>Vinu Dennisan W</h2>
           <p>Learning · Building · Improving</p>
         </aside>
@@ -1191,18 +1191,19 @@ html {
     updateThemeButton();
   });
 
-  const cards = [...document.querySelectorAll(".project-card")];
   const search = document.getElementById("projectSearch");
   const filters = [...document.querySelectorAll(".filter-btn")];
   const count = document.getElementById("projectCount");
+  const grid = document.querySelector(".project-grid");
   let activeFilter = "all";
   const categoryFor = card => {
     const text = (card.innerText || "").toLowerCase();
-    if (/knowledge graph|\bai\b|assistant/.test(text)) return "ai";
+    if (/knowledge graph|\\bai\\b|assistant/.test(text)) return "ai";
     if (/nmap|network|security/.test(text)) return "tools";
     return "web";
   };
   const applyProjectFilters = () => {
+    const cards = [...document.querySelectorAll(".project-grid .project-card")];
     const term = search.value.trim().toLowerCase();
     let shown = 0;
     cards.forEach(card => {
@@ -1220,6 +1221,10 @@ html {
     applyProjectFilters();
   }));
   applyProjectFilters();
+  if (grid && "MutationObserver" in window) {
+    const projectObserver = new MutationObserver(() => applyProjectFilters());
+    projectObserver.observe(grid, { childList: true });
+  }
 
   const revealItems = document.querySelectorAll("section:not(.hero), .project-card, .skill-card");
   revealItems.forEach(item => item.classList.add("reveal"));
